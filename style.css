@@ -1,0 +1,42 @@
+body{
+    margin-top: 50px;
+    margin-left: 100px;
+    
+}
+
+table{
+border-style: groove;
+border: 2px;
+}
+thead{
+    color: grey;
+    text-align: center;
+    font-size: 1.3em;
+    background-color: rgb(197, 225, 216);
+
+}
+
+thead th{
+    width: 150px;
+    padding: 10px;
+    margin: 3px auto 0px ;
+}
+tbody td{
+    color: aliceblue;
+    margin: 10px;
+    padding: 10px;
+}
+
+tbody tr:nth-child(2n){
+    background-color: rgb(41, 80, 80);
+
+}
+
+tbody tr:nth-child(2n+1){
+    background-color: rgb(80, 156, 156);
+
+}
+
+tbody td:not(:first-child){
+    text-align: end;
+}
