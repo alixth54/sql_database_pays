@@ -1,4 +1,10 @@
+document.getElementById('selectcontinent').addEventListener("change",function() {
+	document.getElementById('formfiltres').submit();
+});
 
+document.getElementById('selectregion').addEventListener("change",function() {
+	document.getElementById('formfiltres').submit();
+});
 
 const table =$('#example').DataTable( {
     data: myData,

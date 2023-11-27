@@ -55,7 +55,7 @@ class DAO {
 	/* méthode qui renvoit tous les résultats sous forme de tableau
 	*/
 	public function getCountries($pays="") {
-		$sql="SELECT libelle_continent, libelle_region,`libelle_pays`,`capitale`,`superficie`, `population_pays`, `taux_natalite_pays`, `taux_mortalite_pays`, `esperance_vie_pays`, `taux_mortalite_infantile_pays`, `nombre_enfants_par_femme_pays`, `taux_croissance_pays`, `population_plus_65_pays` FROM `t_pays` LEFT JOIN  t_regions ON(t_pays.region_id=t_regions.id_region)
+		$sql="SELECT `libelle_pays`,`capitale`,`superficie`, `population_pays`, `taux_natalite_pays`, `taux_mortalite_pays`, `esperance_vie_pays`, `taux_mortalite_infantile_pays`, `nombre_enfants_par_femme_pays`, `taux_croissance_pays`, `population_plus_65_pays` FROM `t_pays` LEFT JOIN  t_regions ON(t_pays.region_id=t_regions.id_region)
 		LEFT JOIN t_continents ON(t_continents.id_continent=t_regions.continent_id)";
 if ($pays){
 	if(is_numeric($pays)){

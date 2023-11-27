@@ -34,8 +34,7 @@ echo "<script>var myData = $jsonData;</script>";
 //on affiche l'erreur éventuelle
 if ($dao->getLastError()) print $dao->getLastError();
 
-//on se déconnecte. TOUJOURS FERMER LA CONNEXION A LA BASE DE DONNEES
-$dao->disconnect();
+
 
 
 ?>
@@ -43,8 +42,6 @@ $dao->disconnect();
 <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
-				<th>Continent</th>
-				<th>Region</th>
                 <th>Pays</th>
                 <th>Capitale</th>
                 <th>Superficie</th>
@@ -74,6 +71,10 @@ $dao->disconnect();
             </tr>
         </tfoot> -->
     </table>
+<?php 
+    //on se déconnecte. TOUJOURS FERMER LA CONNEXION A LA BASE DE DONNEES
+$dao->disconnect(); 
+?>
 	<script type="text/javascript" src="Main.js"></script>
 </body>
 </html>
