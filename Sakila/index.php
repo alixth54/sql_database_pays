@@ -19,22 +19,50 @@ if ($dao->getLastError()) print $dao->getLastError();
 
 
 $actor=$dao->getActor();
-$film = $dao->getFilm();
+
+// if(isset($_POST['actor'])&& ($_POST["actor"])){
+// 	$film = $dao->getMovies($_POST['actor']);
+	
+// }else{
+// 	$film = $dao->getFilm();
+// }
+
+$genre=$dao->getGenre();
+
+if(isset($_POST['actor']) && ($_POST["actor"])==''){
+	$film = $dao->getFilm();
+
+}else{$film = $dao->getMovies($_POST['actor']);}
+$array=[];
+
+if (isset($_POST['genre']) && empty($array)){
+	$array=implode("','",$_POST['genre']);
+	
+		$film = $dao->getFilmByGenre($array);
+		
+}
+
+	
+
+
 ?>
 
 <form id="formfiltres" method="post" >
-    <input list="listSearch" type="search" id="searchActor" value="" name="actor" onchange="this.form.submit()" placeholder="nom et prenom acteur">
-    
-    <datalist id="listSearch" name='list'>
-        <?php foreach($actor as $row) { ?>
-            <option value="<?=$row['first_name']?> <?=$row['last_name']?>"><?=$row['first_name']?> <?=$row['last_name']?></option>
-        <?php } ?>
-    </datalist>
-   
-       
-       
+	
+	<?php foreach($genre as $row) { ?>
+	<input type="checkbox" id="genre<?=$row['category_id']?>" name="genre[]" value="<?=$row['name']?>">
+<label for="genre<?=$row['category_id']?>"><?=$row['name']?></label><br>
+<?php } ?>
+<input type="submit" name="formSubmit" value="Filtrer" />
 
-</select>
+    <input list="listSearch" type="search" id="searchActor" value="" name="actor"  placeholder="nom et prenom acteur">
+		<datalist id="listSearch" name='list'>
+			<?php foreach($actor as $row) { ?>
+				<option id='option' value="<?=$row['last_name']?> <?=$row['first_name']?>"> <?=$row['last_name']?> <?=$row['first_name']?></option>
+			<?php } ?>
+		</datalist>
+	
+	
 	
 </form>
 
@@ -43,18 +71,35 @@ $film = $dao->getFilm();
 	<thead>
         
 		<th>Film</th>
+		<?php if(isset($_POST['actor']) && ($_POST["actor"])) { ?>
+			<th>Acteur</th>
+				<?php }  ?>
+
+				<?php if(isset($_POST['genre']) && !empty($array)) { ?>
+					<th>Genre</th>
+				<?php }  ?>
+		
+		
+
+
 	</thead>
 	<tbody>
 		
-        <!-- ?php if(isset($_POST['actor'])== isset($_POST['list'])) {?> -->
+        
         <?php foreach($film as $row) { ?>
+			
 			<tr>
 				<td><?=$row['title']?></td>
-				<td></td>
-				<td></td>
+				<?php if(isset($_POST['actor']) && ($_POST["actor"])) { ?>
+				<td><?=$row['last_name']?> <?=$row['first_name']?></td>
+				<?php }  ?>
+
+				<?php if(isset($_POST['genre']) && !empty($array)) { ?>
+				<td><?=$row['name']?></td>
+				<?php }  ?>
 			</tr>
 		<?php }  ?>
-        <!-- ?php }  ?> -->
+		
 	</tbody>
 </table>
 

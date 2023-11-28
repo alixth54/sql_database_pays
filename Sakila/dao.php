@@ -61,18 +61,55 @@ class DAO {
 	/* méthode qui renvoit tous les résultats sous forme de tableau
 	*/
 	public function getActor() {
-		$sql="SELECT first_name, last_name,actor_id FROM actor;";
+		$sql="SELECT * FROM actor INNER JOIN film_actor ON (film_actor.actor_id=actor.actor_id) GROUP BY last_name,first_name ";
 
 		return $this->getResults($sql);
 	}
 	
-    public function getFilm() {
-		$sql="SELECT title FROM film;";
-
+	public function getFilm() {
+		$sql="SELECT * FROM film INNER JOIN film_actor ON (film_actor.film_id=film.film_id) GROUP BY title";
 		return $this->getResults($sql);
 	}
-	
+    
+	public function getMovies($selection) {
+		$sql="SELECT * FROM film INNER JOIN film_actor ON (film_actor.film_id=film.film_id)";
+		if ($selection) {
+			
+			if(strpos($selection,' ')==true)
+			{
+				$t=explode(" ",$selection);
+				$sql.=" INNER JOIN actor ON (actor.actor_id=film_actor.actor_id) WHERE last_name LIKE '".$t[0]."' AND first_name LIKE '".$t[1]."%' OR last_name LIKE '".$t[1]."%' AND first_name LIKE '".$t[0]."' GROUP BY title ";
+				
+			}else{
+				$sql.=" INNER JOIN actor ON (actor.actor_id=film_actor.actor_id) WHERE last_name LIKE '".$selection."%' OR first_name LIKE '".$selection."%' GROUP BY title, last_name, first_name ORDER BY last_name, first_name ASC";
+				
+			}
+			
+		}
+		
+		return $this->getResults($sql);
+	}
 
+	public function getGenre() {
+		
+			$sql="SELECT * FROM film INNER JOIN film_category ON(film.film_id=film_category.film_id)
+INNER JOIN category ON(category.category_id=film_category.category_id) GROUP BY name";
+			
+		
+		return $this->getResults($sql);
+	}
+
+	public function getFilmByGenre($choix) {
+		$sql="SELECT * FROM film INNER JOIN film_category ON(film.film_id=film_category.film_id)
+		INNER JOIN category ON(category.category_id=film_category.category_id)
+		WHERE name IN ('".$choix."') GROUP BY title;";
+			
+		
+		
+	
+	return $this->getResults($sql);
+		
+	}
 	/* méthode pour fermer la connexion à la base de données */
 	public function disconnect() {
 		$this->bdd=null;
