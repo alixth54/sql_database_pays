@@ -67,24 +67,44 @@ class DAO {
 	}
 	
 	public function getFilm() {
-		$sql="SELECT * FROM film INNER JOIN film_actor ON (film_actor.film_id=film.film_id) GROUP BY title";
+		$sql="SELECT * FROM film 
+		INNER JOIN film_actor ON (film_actor.film_id=film.film_id) 
+		INNER JOIN film_category ON(film_category.film_id=film.film_id)
+		INNER JOIN category ON(film_category.category_id=category.category_id)
+		INNER JOIN actor ON (actor.actor_id=film_actor.actor_id)
+		 GROUP BY title";
+		
 		return $this->getResults($sql);
 	}
     
-	public function getMovies($selection) {
-		$sql="SELECT * FROM film INNER JOIN film_actor ON (film_actor.film_id=film.film_id)";
-		if ($selection) {
+	public function getMovies($selection,$choix) {
+		$sql="SELECT * FROM film 
+		INNER JOIN film_actor ON (film_actor.film_id=film.film_id) 
+		INNER JOIN film_category ON(film_category.film_id=film.film_id)
+		INNER JOIN category ON(film_category.category_id=category.category_id)";
+		if (!empty($choix)) {
 			
 			if(strpos($selection,' ')==true)
 			{
 				$t=explode(" ",$selection);
-				$sql.=" INNER JOIN actor ON (actor.actor_id=film_actor.actor_id) WHERE last_name LIKE '".$t[0]."' AND first_name LIKE '".$t[1]."%' OR last_name LIKE '".$t[1]."%' AND first_name LIKE '".$t[0]."' GROUP BY title ";
+				$sql.=" INNER JOIN actor ON (actor.actor_id=film_actor.actor_id) WHERE name IN ('".$choix."') AND last_name LIKE '".$t[0]."' AND first_name LIKE '".$t[1]."%' OR last_name LIKE '".$t[1]."%' AND first_name LIKE '".$t[0]."'  GROUP BY title ";
 				
 			}else{
-				$sql.=" INNER JOIN actor ON (actor.actor_id=film_actor.actor_id) WHERE last_name LIKE '".$selection."%' OR first_name LIKE '".$selection."%' GROUP BY title, last_name, first_name ORDER BY last_name, first_name ASC";
+				$sql.=" INNER JOIN actor ON (actor.actor_id=film_actor.actor_id) WHERE name IN ('".$choix."') AND last_name LIKE '".$selection."%' OR first_name LIKE '".$selection."%'  GROUP BY title, last_name, first_name ORDER BY last_name, first_name ASC";
 				
 			}
 			
+		}else{
+			if(strpos($selection,' ')==true)
+			{
+				$t=explode(" ",$selection);
+				$sql.=" INNER JOIN actor ON (actor.actor_id=film_actor.actor_id) WHERE last_name LIKE '".$t[0]."' AND first_name LIKE '".$t[1]."%' OR last_name LIKE '".$t[1]."%' AND first_name LIKE '".$t[0]."'  GROUP BY title ";
+				
+			}else{
+				$sql.=" INNER JOIN actor ON (actor.actor_id=film_actor.actor_id) WHERE last_name LIKE '".$selection."%' OR first_name LIKE '".$selection."%'  GROUP BY title, last_name, first_name ORDER BY last_name, first_name ASC";
+				
+			}
+
 		}
 		
 		return $this->getResults($sql);
@@ -92,17 +112,24 @@ class DAO {
 
 	public function getGenre() {
 		
-			$sql="SELECT * FROM film INNER JOIN film_category ON(film.film_id=film_category.film_id)
-INNER JOIN category ON(category.category_id=film_category.category_id) GROUP BY name";
+			$sql="SELECT title, last_name, first_name, name, description FROM film 
+			INNER JOIN film_category ON(film.film_id=film_category.film_id)
+			INNER JOIN category ON(category.category_id=film_category.category_id) 
+			INNER JOIN film_actor ON(film_actor.film_id=film.film_id) 
+			INNER JOIN actor ON(film_actor.actor_id=actor.actor_id) 
+			GROUP BY name;";
 			
 		
 		return $this->getResults($sql);
 	}
 
 	public function getFilmByGenre($choix) {
-		$sql="SELECT * FROM film INNER JOIN film_category ON(film.film_id=film_category.film_id)
+		$sql="SELECT * FROM film 
+		INNER JOIN film_category ON(film.film_id=film_category.film_id)
 		INNER JOIN category ON(category.category_id=film_category.category_id)
-		WHERE name IN ('".$choix."') GROUP BY title;";
+		INNER JOIN film_actor ON(film_actor.film_id=film.film_id)
+		INNER JOIN actor ON(actor.actor_id=film_actor.actor_id)
+		WHERE name IN ('".$choix."')  GROUP BY title";
 			
 		
 		
